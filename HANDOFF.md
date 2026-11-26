@@ -2,7 +2,7 @@
 
 작성일 2026-11-25 · Roblox Studio / Luau · 공동작업 Place **[쿵야]-쿵야 해적단** (Place ID 122417626509059, Universe ID 10774025084)
 
-공동작업 저장본은 **Team Create 버전 39**이다. 고정 식당 원형 23, 시그니처 음식과 서빙, 네 직원의 업무 일곱 동작, 확인하기·오체포 대사와 박치기 연출이 반영돼 있다. 제출용 공개 게시와 검증이 남아 있다.
+공동작업 저장본은 **Team Create 버전 43**이다. 고정 식당 원형 24(간판 표기 "쿵야 레스토랑"), 시그니처 음식과 서빙, 네 직원의 업무 일곱 동작, 확인하기·오체포 대사와 박치기 연출이 반영돼 있다. 제출용 공개 게시와 검증이 남아 있다.
 
 ## 넘겨받는 사람이 먼저 할 일
 
@@ -246,3 +246,16 @@
 - **Studio에서 눈으로 확인할 것 (미검증)** ① `ServerStorage.KoongyaRestaurantAssets.Rigs`의 다섯 리그 크기가 원본 `Workspace.쿵야 에셋`과 같은 비율인지 ② 박치기(`Counter`)에서 허리를 최대 0.82 rad 숙일 때와 조사(`Search`)할 때 몸통과 머리 사이가 벌어져 보이지 않는지 ③ 밤 조명(`Ambient` 보라색, `KoongyaDreamTone` 채도 -0.10)에서 반계쿵야 노랑과 샐러리쿵야 분홍이 원래 색 계열로 보이는지 ④ Creator Store 가구 3종(Diner Booth Seats·Stove·Old Shelf)에 다른 IP 로고나 상표가 없는지 ⑤ 간판 변경 후 식당 원형을 다시 만들었을 때 외관·대기실 간판 글자.
 - **유보** Roblox Studio MCP는 `claude mcp add`로 다시 등록했고 수동 initialize 응답(RobloxStudio 1.0.0)을 받았다. 다만 이 세션에서 도구가 로드되지 않았고 Studio도 실행 중이 아니었다. 그래서 Studio 반영, 저장, 위 ①~⑤는 하지 않았다. 다음 세션에서 Studio로 Place 122417626509059의 Edit 모드를 연 뒤 `Map.luau`를 반영하고 ①~⑤를 확인한다. **MCP 등록 메모:** 이 PC에서는 `cmd.exe /c ... mcp.bat` 방식이 `claude mcp list` 상태 검사에서 매번 CONNECTION_CLOSED로 실패했다. 수동 initialize와 tools/list에는 정상 응답했다. 그래서 `StudioMCP.exe`를 직접 등록했다(`claude mcp add --transport stdio Roblox_Studio -- "%LOCALAPPDATA%\Roblox\Versions\version-8d7a1009c17e4ff8\StudioMCP.exe"`, 실제 등록은 경로를 펼친 값). 이 방식은 Connected다. Studio가 업데이트되면 버전 폴더가 바뀌므로 다시 등록해야 한다. 공개 게시물의 제목·설명에 쓰는 표기("쿵야 레스토랑즈" 띄어쓰기, 영문은 KOONGYA RESTAURANTZ)도 게시 전에 확인한다.
 - **기준 Studio 버전** 접속하지 못했다. 문서 기준은 Team Create 버전 39다.
+
+### 2026-11-26 · 제작 가이드 준수 점검 이어서 → Team Create 버전 43
+
+- **반영** Studio에 연결하니 Place 122417626509059의 Edit 모드였고 PlaceVersion은 40이었다. Studio `Map`과 로컬 `Map.luau`의 차이는 간판 두 줄과 `TEMPLATE_VERSION`뿐이었다. 그 세 줄만 `ScriptEditorService:UpdateSourceAsync`로 고쳤고, CR을 뺀 로컬 파일과 길이 35,211자·해시가 같은지 확인했다. 임시 복제 모듈로 `Map.templates`를 호출해 `ServerStorage.KoongyaRestaurantAssets.Rooms.Restaurant`를 원형 24로 다시 만들었다.
+- **① 리그 비율 (통과)** `Rigs`의 0~4 다섯 개를 Head MeshId로 `Workspace.쿵야 에셋.캐릭터`의 원본(01 양파·02 주먹밥·03 샐러리·04 무시·05 반계)과 짝지었다. 모든 파츠 크기 차이가 0이었고 `GetScale()`은 1이었다. 바운딩 크기도 원본과 같았다.
+- **② 박치기·조사 자세 (통과, 주먹밥쿵야만)** Edit에서는 관절 C0 변경이 화면에 반영되지 않았다. 그래서 1인 Play 클라이언트에서 내 캐릭터(주먹밥쿵야)의 `Waist`·`Neck` Transform에 `Motion.client.luau`의 박치기 최대값(허리 −0.82 rad, 목 ×0.18)과 조사 값(허리 0.38, 목 0.38×0.18−0.3)을 걸었다. 측면에서 머리와 몸통이 붙은 채 함께 기울었고 틈은 보이지 않았다. 다른 네 직원은 같은 관절 구조지만 따로 확인하지 않았다.
+- **③ 밤 조명 색 (통과)** Lighting은 Ambient (73,67,86), `KoongyaDreamTone` 채도 −0.10·밝기 −0.04·대비 0.05다. 가장 어두운 바깥 밤 조명에 다섯 리그를 세워 봤다. 양파 초록·주먹밥 흰색·샐러리 분홍·무시 흰색·반계 노랑이 각자 고유 색 계열로 보였다.
+- **④ Creator Store 가구 (통과)** `DecorSources`의 Booth(Part 10·Union 3)·Range(Part 3·Union 11)·Shelf(Part 26·MeshPart 4)에는 Decal·Texture·SurfaceGui·TextLabel·스크립트가 없고 MeshPart TextureID도 비어 있다. 그래서 다른 IP의 로고나 상표가 들어갈 수 없다. 화면으로도 무늬 없는 부스·선반을 확인했다.
+- **⑤ 간판 (통과)** 원형의 `Exterior.Sign` 양면이 "쿵야 레스토랑"이었다. 1인 Play에서 실행 시 생성되는 `KoongyaRestaurantLobby.Sign` 양면도 "쿵야 레스토랑"이었다. 콘솔 출력은 비어 있었다.
+- **정리와 저장** 미리보기용 `DecorPreviewTmp`와 임시 모듈은 삭제했다. Play를 멈춘 뒤 Edit에서 소스·원형 24를 다시 확인하고 `save_place`로 **Team Create 버전 43**에 저장했다(직전 확인 40과 43 사이의 41·42는 이번 세션의 저장이 아니다).
+- **유보** 2인 회귀 테스트는 하지 않았다. 공개 게시물 제목·설명의 표기("쿵야 레스토랑즈", 영문 KOONGYA RESTAURANTZ)와 Creator Store 가구 3종의 이용 조건은 게시 전에 확인한다.
+- **다음** 남은 작업의 "먼저 할 일"(버전 39 이후 2인 회귀: 새 업무 소품·박치기 먼지·별, 조사→벨→개방→문턱→재대결)을 버전 43에서 진행한다.
+- **확인한 Studio 버전** Team Create 버전 43 (Edit 모드, Place 122417626509059).
